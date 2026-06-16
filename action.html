@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어둠과 빛 Trading · Hesap Doğrulama</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;}
+
+/* ── VIDEO ARKA PLAN ── */
+.vbg{position:fixed;inset:0;z-index:0;}
+.vbg video{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;}
+.vbg video.playing{opacity:1;}
+.vbg-overlay{position:fixed;inset:0;z-index:1;background:rgba(4,2,12,.72);}
+
+/* Faction renk overlay */
+.faction-glow{position:fixed;inset:0;z-index:2;pointer-events:none;transition:opacity 1.5s;}
+body.asmo .faction-glow{background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(100,20,200,.35) 0%,transparent 65%);}
+body.elyos .faction-glow{background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(20,140,255,.3) 0%,transparent 65%);}
+
+/* ── PARÇACIKLAR ── */
+#fx-canvas{position:fixed;inset:0;z-index:3;pointer-events:none;}
+
+/* ── KART ── */
+.wrap{
+  position:relative;z-index:10;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;
+}
+
+.card{
+  width:100%;max-width:440px;
+  border-radius:20px;padding:40px 36px;text-align:center;
+  position:relative;overflow:hidden;
+  animation:cardIn .5s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+
+body.asmo .card{
+  background:linear-gradient(160deg,rgba(18,5,48,.97),rgba(8,2,22,.98));
+  border:1px solid rgba(155,107,224,.45);
+  box-shadow:0 0 80px rgba(100,30,200,.3),0 0 160px rgba(80,10,160,.15),inset 0 0 40px rgba(80,20,160,.06);
+}
+body.elyos .card{
+  background:linear-gradient(160deg,rgba(4,18,55,.97),rgba(2,8,28,.98));
+  border:1px solid rgba(40,180,240,.45);
+  box-shadow:0 0 80px rgba(20,120,240,.28),0 0 160px rgba(10,80,180,.14),inset 0 0 40px rgba(20,100,200,.06);
+}
+
+/* Üst çizgi */
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  animation:lineSweep 1.8s cubic-bezier(.4,0,.2,1) .1s forwards;
+  opacity:0;
+}
+@keyframes lineSweep{0%{opacity:0;transform:scaleX(0);transform-origin:left}60%{opacity:1}100%{opacity:.7;transform:scaleX(1);transform-origin:left}}
+body.asmo .card::before{background:linear-gradient(90deg,transparent,rgba(200,120,255,.95),rgba(155,107,224,.7),transparent);}
+body.elyos .card::before{background:linear-gradient(90deg,transparent,rgba(100,220,255,.95),rgba(40,180,240,.7),transparent);}
+
+/* İç glow */
+.card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  animation:aura 3s ease-in-out infinite alternate;
+}
+body.asmo .card::after{background:radial-gradient(ellipse 70% 30% at 50% 0%,rgba(155,107,224,.12) 0%,transparent 70%);}
+body.elyos .card::after{background:radial-gradient(ellipse 70% 30% at 50% 0%,rgba(40,180,240,.1) 0%,transparent 70%);}
+@keyframes aura{0%{opacity:.5}100%{opacity:1}}
+
+.card-inner{position:relative;z-index:1;}
+
+/* ── LOGO ── */
+.logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:32px;}
+.logo-ico{
+  width:46px;height:46px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+body.asmo .logo-ico{background:rgba(100,40,200,.2);border:1px solid rgba(155,107,224,.45);}
+body.elyos .logo-ico{background:rgba(20,120,220,.18);border:1px solid rgba(40,180,240,.45);}
+.logo-text{}
+.logo-name{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.04em;}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+
+/* ── FACTION TAG ── */
+.faction-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:.25em;text-transform:uppercase;
+  margin-bottom:24px;opacity:.7;
+}
+.faction-tag::before,.faction-tag::after{content:'';width:28px;height:1px;}
+body.asmo .faction-tag{color:rgba(180,140,255,.8);}
+body.asmo .faction-tag::before,body.asmo .faction-tag::after{background:rgba(155,107,224,.4);}
+body.elyos .faction-tag{color:rgba(140,200,255,.8);}
+body.elyos .faction-tag::before,body.elyos .faction-tag::after{background:rgba(40,180,240,.4);}
+
+/* ── ICON ── */
+.icon-wrap{
+  width:80px;height:80px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;font-size:34px;border:2px solid;
+  animation:popIn .55s cubic-bezier(.34,1.56,.64,1) .2s both;
+}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.icon-wrap.loading{border-color:rgba(155,107,224,.5);background:rgba(100,40,200,.1);}
+body.elyos .icon-wrap.loading{border-color:rgba(40,180,240,.5);background:rgba(20,120,220,.1);}
+.icon-wrap.success{background:rgba(10,40,20,.8);border-color:#4ade80;}
+.icon-wrap.error{background:rgba(40,10,10,.8);border-color:#f87171;}
+.icon-wrap.key{background:rgba(40,30,5,.8);border-color:#c8a84c;}
+
+.spin{display:inline-block;animation:spin 1s linear infinite;font-size:28px;}
+body.asmo .spin{color:rgba(180,120,255,.9);}
+body.elyos .spin{color:rgba(80,200,255,.9);}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TITLES ── */
+.title{
+  font-family:'Cinzel',serif;font-size:20px;font-weight:700;
+  color:#fff;margin-bottom:8px;letter-spacing:.03em;
+}
+body.asmo .title{text-shadow:0 0 24px rgba(155,107,224,.4);}
+body.elyos .title{text-shadow:0 0 24px rgba(40,180,240,.4);}
+
+.subtitle{
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;
+  color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:26px;
+}
+
+/* ── BUTONLAR ── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px;margin-bottom:8px;border-radius:10px;
+  font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-decoration:none;cursor:pointer;border:none;transition:all .2s;
+}
+.btn.primary{
+  color:#e0d0ff;
+}
+body.asmo .btn.primary{
+  background:linear-gradient(135deg,rgba(80,15,190,.9),rgba(150,60,255,.8));
+  border:1px solid rgba(155,107,224,.5);
+}
+body.asmo .btn.primary:hover{box-shadow:0 0 28px rgba(155,107,224,.5);transform:translateY(-1px);}
+body.elyos .btn.primary{
+  background:linear-gradient(135deg,rgba(0,90,200,.9),rgba(20,160,255,.8));
+  border:1px solid rgba(40,180,240,.5);color:#d0f0ff;
+}
+body.elyos .btn.primary:hover{box-shadow:0 0 28px rgba(40,180,240,.5);transform:translateY(-1px);}
+.btn.secondary{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.45);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;
+}
+.btn.secondary:hover{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.7);}
+
+/* ── FORM ── */
+.reset-form{text-align:left;margin-top:4px;}
+.field-lbl{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.3);margin-bottom:5px;}
+.field-in{
+  width:100%;padding:11px 14px;margin-bottom:12px;
+  background:rgba(255,255,255,.05);border-radius:8px;color:#fff;font-size:13px;
+  transition:all .2s;
+}
+body.asmo .field-in{border:1px solid rgba(155,107,224,.25);}
+body.asmo .field-in:focus{outline:none;border-color:rgba(155,107,224,.6);box-shadow:0 0 0 3px rgba(100,40,200,.15);}
+body.elyos .field-in{border:1px solid rgba(40,180,240,.25);}
+body.elyos .field-in:focus{outline:none;border-color:rgba(40,180,240,.6);box-shadow:0 0 0 3px rgba(20,120,220,.15);}
+.match-hint{font-size:11px;margin:-6px 0 12px;min-height:16px;}
+.match-ok{color:#4ade80;}
+.match-err{color:#f87171;}
+
+/* ── INFO BOX ── */
+.info-box{
+  border-radius:9px;padding:12px 14px;font-size:11px;
+  color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:18px;text-align:left;
+}
+body.asmo .info-box{background:rgba(100,40,200,.08);border:1px solid rgba(155,107,224,.2);}
+body.elyos .info-box{background:rgba(20,120,220,.08);border:1px solid rgba(40,180,240,.2);}
+.info-box strong{color:rgba(200,160,255,.8);}
+body.elyos .info-box strong{color:rgba(140,210,255,.8);}
+
+/* Reset msg */
+.reset-msg{font-size:12px;text-align:center;margin-top:8px;min-height:16px;}
+.reset-msg.ok{color:#4ade80;}
+.reset-msg.err{color:#f87171;}
+
+/* ── FOOTER ── */
+.page-footer{
+  position:relative;z-index:10;margin-top:20px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;
+  color:rgba(255,255,255,.2);text-align:center;text-transform:uppercase;
+}
+.page-footer a{color:rgba(255,255,255,.35);text-decoration:none;}
+body.asmo .page-footer a:hover{color:rgba(180,140,255,.8);}
+body.elyos .page-footer a:hover{color:rgba(140,210,255,.8);}
+</style>
+</head>
+<body class="asmo">
+
+<!-- Video arka plan -->
+<div class="vbg">
+  <video id="bg-video" muted loop playsinline preload="auto"></video>
+</div>
+<div class="vbg-overlay"></div>
+<div class="faction-glow"></div>
+<canvas id="fx-canvas"></canvas>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+
+      <!-- Logo -->
+      <div class="logo">
+        <div class="logo-ico">
+          <img src="https://res.cloudinary.com/dxbsrlgaf/image/upload/v1777145851/image_2026-04-25_223728684_xbvzkf.png" style="width:26px;height:26px;object-fit:contain;">
+        </div>
+        <div class="logo-text">
+          <div class="logo-name">어둠과 빛 Trading</div>
+          <div class="logo-sub">Aion 4.6 · Characters & Kinah</div>
+        </div>
+      </div>
+
+      <!-- Faction tag -->
+      <div class="faction-tag" id="faction-tag">Asmodian</div>
+
+      <!-- Loading -->
+      <div id="state-loading">
+        <div class="icon-wrap loading"><span class="spin">⟳</span></div>
+        <div class="title">Processing...</div>
+        <div class="subtitle">Please wait</div>
+      </div>
+
+      <!-- Verified -->
+      <div id="state-verified" style="display:none">
+        <div class="icon-wrap success">✓</div>
+        <div class="title">Email Verified!</div>
+        <div class="subtitle">Your account has been successfully activated.<br>You can now sign in.</div>
+        <a class="btn primary" href="https://aion-trading.netlify.app">⚔ Go to Site & Sign In</a>
+        <a class="btn secondary" href="https://aion-trading.netlify.app">Return to Home</a>
+      </div>
+
+      <!-- Reset password -->
+      <div id="state-reset" style="display:none">
+        <div class="icon-wrap key">🔑</div>
+        <div class="title">Set New Password</div>
+        <div class="subtitle">Enter a strong new password for your account.</div>
+        <div class="reset-form">
+          <label class="field-lbl">New Password</label>
+          <input class="field-in" type="password" id="new-pass" placeholder="••••••" oninput="checkMatch()">
+          <label class="field-lbl">Confirm Password</label>
+          <input class="field-in" type="password" id="new-pass2" placeholder="••••••" oninput="checkMatch()">
+          <div class="match-hint" id="match-hint"></div>
+          <button class="btn primary" onclick="doResetPassword()">🔑 Update Password</button>
+        </div>
+        <div class="reset-msg" id="reset-msg"></div>
+      </div>
+
+      <!-- Error -->
+      <div id="state-error" style="display:none">
+        <div class="icon-wrap error">✕</div>
+        <div class="title" id="error-title">Something went wrong</div>
+        <div class="subtitle" id="error-desc">The link may be invalid or expired.</div>
+        <div class="info-box">
+          To receive a new verification email, visit <strong>aion-trading.netlify.app</strong> and try signing in again.
+        </div>
+        <a class="btn primary" href="https://aion-trading.netlify.app">⚔ Return to Site</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-footer">
+    어둠과 빛 Trading · <a href="https://aion-trading.netlify.app">Home</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDi8HLgBXxjfwmS_dQht3MDpHEOSS9VIrY",
+  authDomain: "vorgheizer-trading.firebaseapp.com",
+  projectId: "vorgheizer-trading",
+  storageBucket: "vorgheizer-trading.firebasestorage.app",
+  messagingSenderId: "1052512132351",
+  appId: "1:1052512132351:web:f7cc0e6368c843d1b640ca"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ── URL PARAMS ──
+const params  = new URLSearchParams(window.location.search);
+const mode    = params.get('mode');
+const oobCode = params.get('oobCode');
+
+// ── FACTION TESPİT ──
+// resetPassword → loop_01 (Asmo), verifyEmail → loop_00 (Hero/Elyos mix)
+// URL'de faction parametresi varsa kullan, yoksa mode'a göre
+const factionParam = params.get('faction');
+const isAsmo = factionParam ? factionParam === 'asmo' : (mode === 'resetPassword');
+const faction = isAsmo ? 'asmo' : 'elyos';
+
+// Body class ve faction tag
+document.body.className = faction;
+document.getElementById('faction-tag').textContent = isAsmo ? 'Asmodian' : 'Elyos';
+
+// ── VİDEO ARKA PLAN ──
+const VIDEOS = {
+  asmo: 'https://res.cloudinary.com/dxbsrlgaf/video/upload/q_auto/v1776986238/loop_01_vatd2i.mp4',
+  elyos: 'https://res.cloudinary.com/dxbsrlgaf/video/upload/q_auto/v1776986245/loop_02_mj7vih.mp4',
+};
+const bgVid = document.getElementById('bg-video');
+bgVid.src = VIDEOS[faction];
+bgVid.load();
+bgVid.play().catch(()=>{});
+bgVid.addEventListener('playing', ()=>{ bgVid.classList.add('playing'); }, {once:true});
+
+// ── PARTİKÜL SİSTEMİ ──
+(function(){
+  const canvas = document.getElementById('fx-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId;
+
+  function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawn(){
+    const fromBottom = isAsmo;
+    return {
+      x: Math.random()*W,
+      y: fromBottom ? H+10 : -10,
+      vx: (Math.random()-.5)*.9,
+      vy: fromBottom ? -(Math.random()*1.2+.4) : (Math.random()*1.2+.4),
+      size: Math.random()*3.5+1.5,
+      alpha:0, maxAlpha: Math.random()*.7+.25,
+      dur: Math.random()*200+120, tick:0,
+      twinkle: Math.random()*Math.PI*2,
+      type: Math.random()>.65?'spark':'orb',
+    };
+  }
+
+  for(let i=0;i<60;i++){const p=spawn();p.tick=Math.floor(Math.random()*p.dur);p.y=Math.random()*H;particles.push(p);}
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Arka plan glow
+    const cy = isAsmo ? H*.88 : H*.12;
+    const g = ctx.createRadialGradient(W/2,cy,0,W/2,cy,W*.6);
+    if(isAsmo){g.addColorStop(0,'rgba(110,25,210,.12)');g.addColorStop(.5,'rgba(80,15,160,.06)');g.addColorStop(1,'transparent');}
+    else{g.addColorStop(0,'rgba(25,140,240,.1)');g.addColorStop(.5,'rgba(15,90,200,.05)');g.addColorStop(1,'transparent');}
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.tick++;p.x+=p.vx;p.y+=p.vy;p.twinkle+=.05;
+      const pr=p.tick/p.dur;
+      if(pr<.15) p.alpha=(pr/.15)*p.maxAlpha;
+      else if(pr>.75) p.alpha=((1-pr)/.25)*p.maxAlpha;
+      else p.alpha=p.maxAlpha;
+      const a=p.alpha*(.8+.2*Math.sin(p.twinkle));
+      if(p.tick>=p.dur){particles.splice(i,1);particles.push(spawn());continue;}
+      if(p.type==='spark'){
+        ctx.save();ctx.globalAlpha=a;
+        ctx.strokeStyle=isAsmo?'rgba(220,150,255,1)':'rgba(100,220,255,1)';
+        ctx.lineWidth=p.size*.45;ctx.shadowBlur=12;
+        ctx.shadowColor=isAsmo?'rgba(180,80,255,.9)':'rgba(60,200,255,.9)';
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*12,p.y-p.vy*12);ctx.stroke();ctx.restore();
+      } else {
+        ctx.save();
+        const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*4.5);
+        if(isAsmo){grd.addColorStop(0,`rgba(215,155,255,${a})`);grd.addColorStop(.4,`rgba(155,107,224,${a*.55})`);grd.addColorStop(1,'rgba(100,40,200,0)');}
+        else{grd.addColorStop(0,`rgba(145,235,255,${a})`);grd.addColorStop(.4,`rgba(40,180,240,${a*.55})`);grd.addColorStop(1,'rgba(20,120,220,0)');}
+        ctx.fillStyle=grd;ctx.beginPath();ctx.arc(p.x,p.y,p.size*4.5,0,Math.PI*2);ctx.fill();
+        ctx.globalAlpha=Math.min(a*1.6,1);
+        ctx.fillStyle=isAsmo?'#f5e8ff':'#e8f8ff';
+        ctx.shadowBlur=18;ctx.shadowColor=isAsmo?'rgba(210,130,255,1)':'rgba(90,220,255,1)';
+        ctx.beginPath();ctx.arc(p.x,p.y,p.size*.75,0,Math.PI*2);ctx.fill();ctx.restore();
+      }
+    }
+    animId=requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── STATE ──
+function show(id){
+  ['state-loading','state-verified','state-reset','state-error'].forEach(s=>{
+    document.getElementById(s).style.display=s===id?'block':'none';
+  });
+}
+function showError(title,desc){
+  document.getElementById('error-title').textContent=title||'Something went wrong';
+  document.getElementById('error-desc').textContent=desc||'The link may be invalid or expired.';
+  show('state-error');
+}
+
+// ── MAIN LOGIC ──
+if(!mode||!oobCode){
+  showError('Invalid Link','This page cannot be opened directly.');
+} else if(mode==='verifyEmail'){
+  applyActionCode(auth,oobCode)
+    .then(()=>show('state-verified'))
+    .catch(e=>{
+      if(e.code==='auth/invalid-action-code')
+        showError('Link Invalid or Expired','Your email may already be verified. Try signing in.');
+      else showError('Verification Failed',e.message);
+    });
+} else if(mode==='resetPassword'){
+  verifyPasswordResetCode(auth,oobCode)
+    .then(()=>show('state-reset'))
+    .catch(()=>showError('Invalid Link','The password reset link is invalid or has expired.'));
+} else {
+  showError('Unknown Action','This link is not recognized.');
+}
+
+// ── PASSWORD FORM ──
+window.checkMatch=function(){
+  const p1=document.getElementById('new-pass').value;
+  const p2=document.getElementById('new-pass2').value;
+  const hint=document.getElementById('match-hint');
+  if(!p2){hint.textContent='';return;}
+  if(p1===p2&&p1.length>=6){hint.textContent='✓ Passwords match';hint.className='match-hint match-ok';}
+  else if(p1!==p2){hint.textContent='✕ Passwords do not match';hint.className='match-hint match-err';}
+  else{hint.textContent='Min. 6 characters';hint.className='match-hint match-err';}
+};
+
+window.doResetPassword=async function(){
+  const p1=document.getElementById('new-pass').value;
+  const p2=document.getElementById('new-pass2').value;
+  const msg=document.getElementById('reset-msg');
+  if(p1!==p2){msg.className='reset-msg err';msg.textContent='Passwords do not match!';return;}
+  if(p1.length<6){msg.className='reset-msg err';msg.textContent='At least 6 characters required.';return;}
+  try{
+    await confirmPasswordReset(auth,oobCode,p1);
+    msg.className='reset-msg ok';
+    msg.textContent='✅ Password updated! Redirecting...';
+    setTimeout(()=>{ window.location.href='https://aion-trading.netlify.app'; },2000);
+  }catch(e){msg.className='reset-msg err';msg.textContent='Error: '+e.message;}
+};
+</script>
+</body>
+</html>
