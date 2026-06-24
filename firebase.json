@@ -1,6 +1,12 @@
 {
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", ".github"]
+    "ignore": ["firebase.json", ".github"],
+    "rewrites": [
+      {
+        "source": "/__/auth/action",
+        "destination": "/action.html"
+      }
+    ]
   }
 }
