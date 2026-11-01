@@ -4923,12 +4923,7 @@ function addSparks(e){
   document.body.appendChild(s);setTimeout(()=>s.remove(),600);
 }
 
-/* PRELOAD */
-const PRELOAD_URLS=['https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776987418/in_01_ekkq3u.mp4','https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776987423/in_02_c90u7l.mp4'];
-const preloadedVideos={};
-PRELOAD_URLS.forEach(url=>{
-  const v=document.createElement('video');v.src=url;v.preload='auto';v.muted=true;v.style.display='none';document.body.appendChild(v);v.load();preloadedVideos[url]=v;
-});
+/* PRELOAD: geçiş videoları getTransVid() ile tek sefer iner (çift indirme kaldırıldı) */
 
 showSection(0);
 
