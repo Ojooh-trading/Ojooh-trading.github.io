@@ -13,6 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="어둠과 빛">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400..800&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>emailjs.init('mzvP_hsSGN6eEoK2u');</script>
 <style>
@@ -2108,6 +2109,393 @@ body::before{content:'';position:fixed;inset:0;z-index:100;pointer-events:none;b
   .hero-t1,.hero-t2{font-size:clamp(32px,10vw,52px)!important;}
   .faction-btn{font-size:9px;padding:11px 12px;}
 }
+
+/* ═══════════ CAM TEMA (admin_v2_glass ile aynı dil) ═══════════
+   Sadece: hero yazıları · yorum kartları · satın alma butonları · yan panel
+   Mantık / JS / id / class değişmedi. Geri almak için bu bloğu silmen yeter. */
+:root{--g-font:Urbanist,'Noto Sans KR','Malgun Gothic',ui-sans-serif,system-ui,sans-serif;
+--g-glass:#1e1e226b;--g-panel:#18181dc2;--g-blur:14px;--g-sat:175%;
+--g-sheen:#ffffff1a;--g-line:#ffffff1f;--g-well:#c8c8d71a;
+--g-depth:inset 0 1px 1px #ffffff4d,inset 0 -1px 1px #ffffff1a,inset 3px 4px 12px -6px #ffffff38,inset -4px -6px 14px -8px #ffffff1f,inset 0 -16px 28px -18px #00000073;
+--g-shadow:0 1px 2px #0000004d,0 24px 48px -22px #000000bf;
+--g-lens:linear-gradient(180deg,#ffffff52,#ffffff1f);
+--g-text:#f6f8fc;--g-muted:#c9d1de;--g-dim:#f6f8fc73;
+--g-gold:#f3cd7e;--g-blue:#a9cdfc;--g-violet:#d3c0fb}
+
+/* ── HERO YAZILARI ── */
+.hero-tag{width:fit-content;margin:0 auto 18px;padding:7px 18px;gap:0;border-radius:999px;font-family:var(--g-font);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--g-gold);
+background:linear-gradient(172deg,var(--g-sheen),transparent 60%),var(--g-glass);-webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));border:1px solid var(--g-line);box-shadow:var(--g-depth)}
+.hero-tag .tag-line{display:none}
+.hero-t1{font-family:var(--g-font);font-size:clamp(46px,7.2vw,96px);font-weight:700;letter-spacing:-.02em;line-height:1.05;color:var(--g-text);text-shadow:0 2px 28px #000000a6}
+.hero-t2{font-family:var(--g-font);font-size:clamp(52px,8.4vw,112px);font-weight:800;letter-spacing:-.03em;line-height:1;background:linear-gradient(180deg,#fcebb8 0%,#f3cd7e 55%,#d8a84a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 24px #0000008c) drop-shadow(0 0 28px #f3cd7e3d)}
+.hero-div{width:120px;background:linear-gradient(90deg,transparent,#ffffff66,transparent);margin:18px auto}
+.hero-sub{width:fit-content;max-width:min(680px,92vw);margin:0 auto 20px;padding:14px 26px;border-radius:24px;font-family:var(--g-font);font-size:clamp(14px,1.25vw,17px);font-weight:500;font-style:normal;line-height:1.55;color:var(--g-muted);text-wrap:balance;
+background:linear-gradient(172deg,var(--g-sheen),transparent 34%),var(--g-glass);-webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));border:1px solid var(--g-line);box-shadow:var(--g-depth),var(--g-shadow)}
+.hero-sub-premium{font-weight:700;letter-spacing:0;background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:var(--g-gold);color:var(--g-gold);filter:none}
+.hero-sub-sep{color:#ffffff59}
+.hero-sub-detail{color:var(--g-muted)}
+.hero-tags-line{font-family:var(--g-font);font-size:12px;font-weight:500;letter-spacing:.02em;text-transform:none;color:#ffffff94;text-shadow:0 1px 10px #000000b3;margin-top:16px}
+
+/* ── YORUM KARTLARI ── */
+#s1 .vmf-label,#s2 .vmf-label{font-family:var(--g-font);font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:none;opacity:.9;text-shadow:0 1px 8px #000000a6}
+#s1 .vmf-label{color:var(--g-violet)}#s2 .vmf-label{color:var(--g-blue)}
+.vmf-placeholder{padding:10px 14px;border-radius:16px;font-family:var(--g-font);font-size:12.5px;line-height:1.45;color:var(--g-muted);max-width:205px;
+background:linear-gradient(172deg,var(--g-sheen),transparent 40%),var(--g-glass);-webkit-backdrop-filter:blur(var(--g-blur));backdrop-filter:blur(var(--g-blur));border:1px solid var(--g-line);box-shadow:var(--g-depth)}
+.vmf-msg,.vmf-msg.asmo-msg,.vmf-msg.elyos-msg,#s1 .vmf-msg.admin-reply,#s2 .vmf-msg.admin-reply{max-width:220px;padding:13px 16px 11px;border-radius:20px!important;font-family:var(--g-font);font-size:14px;font-weight:500;font-style:normal!important;line-height:1.5;color:var(--g-text)!important;
+-webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));border:1px solid var(--g-line)!important;box-shadow:var(--g-depth),var(--g-shadow)!important}
+.vmf-msg.asmo-msg{background:linear-gradient(172deg,var(--g-sheen),transparent 34%),linear-gradient(135deg,#9b6be038,transparent 70%),var(--g-glass)!important}
+.vmf-msg.elyos-msg{background:linear-gradient(172deg,var(--g-sheen),transparent 34%),linear-gradient(135deg,#6ab4e838,transparent 70%),var(--g-glass)!important}
+#s1 .vmf-msg.admin-reply,#s2 .vmf-msg.admin-reply{color:var(--g-gold)!important;margin:0!important;
+background:linear-gradient(172deg,var(--g-sheen),transparent 34%),linear-gradient(135deg,#f3cd7e2e,transparent 70%),var(--g-glass)!important;
+box-shadow:var(--g-depth),var(--g-shadow),inset 0 2px 0 #f3cd7e66!important}
+#s1 .vmf-msg.admin-reply{margin-left:22px!important}
+#s2 .vmf-msg.admin-reply{margin-right:22px!important;align-self:flex-end!important}
+.vmf-msg-meta{font-family:var(--g-font);font-size:12px;font-style:normal;font-weight:500;color:var(--g-dim);margin-top:8px}
+.vmf-msg.admin-reply .vmf-msg-meta{color:#f3cd7e8c}
+
+/* ── SATIN ALMA BUTONLARI ── */
+.faction-label{font-family:var(--g-font);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:none;text-shadow:0 1px 8px #000000a6}
+.faction-slogan{font-family:var(--g-font);font-size:15px;font-style:normal;font-weight:500;color:#f6f8fcb8;text-shadow:0 1px 10px #000000b3}
+#s1 .faction-btn-row .faction-btn,#s2 .faction-btn-row .faction-btn{gap:8px;padding:12px 24px!important;border-radius:999px!important;font-family:var(--g-font);font-size:14px!important;font-weight:600;letter-spacing:0!important;text-transform:none!important;
+background:linear-gradient(172deg,var(--g-sheen),transparent 60%),var(--g-glass)!important;-webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));
+border:1px solid var(--g-line)!important;box-shadow:var(--g-depth),var(--g-shadow)!important;transition:transform .2s,background .2s,color .2s}
+#s1 .faction-btn-row .faction-btn::before,#s2 .faction-btn-row .faction-btn::before{display:none}
+#s1 .faction-btn-row .faction-btn-asmo{color:var(--g-violet)!important}
+#s2 .faction-btn-row .faction-btn-elyos{color:var(--g-blue)!important}
+#s1 .faction-btn-row .faction-btn-kinah,#s2 .faction-btn-row .faction-btn-kinah{color:var(--g-gold)!important}
+#s1 .faction-btn-row .faction-btn:hover,#s2 .faction-btn-row .faction-btn:hover{background:var(--g-lens)!important;transform:translateY(-2px);box-shadow:var(--g-depth),var(--g-shadow)!important}
+#s1 .faction-btn-row .faction-btn:active,#s2 .faction-btn-row .faction-btn:active{transform:scale(1.04,.94)}
+.faction-btn:focus-visible,.sp-tab:focus-visible,.sp-close:focus-visible{outline:2px solid var(--g-blue);outline-offset:2px}
+
+/* ── YAN PANEL (Characters / Kinah) ── */
+#side-panel-overlay .side-panel.from-left,#side-panel-overlay .side-panel.from-right{
+background:linear-gradient(172deg,var(--g-sheen),transparent 30%),var(--g-panel)!important;
+-webkit-backdrop-filter:blur(30px) saturate(var(--g-sat))!important;backdrop-filter:blur(30px) saturate(var(--g-sat))!important;
+border:0!important;box-shadow:var(--g-depth),var(--g-shadow)}
+#side-panel-overlay .side-panel.from-left{border-right:1px solid var(--g-line)!important;background:linear-gradient(172deg,var(--g-sheen),transparent 30%),linear-gradient(135deg,#9b6be026,transparent 55%),var(--g-panel)!important}
+#side-panel-overlay .side-panel.from-right{border-left:1px solid var(--g-line)!important;background:linear-gradient(172deg,var(--g-sheen),transparent 30%),linear-gradient(225deg,#6ab4e826,transparent 55%),var(--g-panel)!important}
+@media (min-width:769px){
+#side-panel-overlay .side-panel.from-left{border-radius:0 28px 28px 0}
+#side-panel-overlay .side-panel.from-right{border-radius:28px 0 0 28px}}
+.side-panel::after{display:none}
+#side-panel-overlay .side-panel .sp-hdr{background:transparent!important;border-bottom:1px solid var(--g-line)}
+.sp-faction-tag{font-family:var(--g-font);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--g-gold)}
+.sp-title{font-family:var(--g-font);font-size:28px;font-weight:700;letter-spacing:-.01em;color:var(--g-text)}
+.sp-close{width:36px;height:36px;border-radius:999px;font-family:var(--g-font);font-size:14px;color:var(--g-muted);border:1px solid var(--g-line);background:linear-gradient(172deg,var(--g-sheen),transparent 60%),var(--g-glass);box-shadow:var(--g-depth);transition:transform .2s,background .2s,color .2s}
+.sp-close:hover{background:var(--g-lens);color:var(--g-text);border-color:var(--g-line)}
+.sp-close:active{transform:scale(1.08,.92)}
+#side-panel-overlay .side-panel .sp-tabs{background:transparent!important;gap:6px;padding:12px 24px;border-bottom:1px solid var(--g-line)}
+#side-panel-overlay .side-panel .sp-tab{border:0!important;border-radius:999px;padding:9px 18px;font-family:var(--g-font);font-size:13.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--g-muted);text-shadow:none;background:transparent;transition:background .2s,color .2s}
+#side-panel-overlay .side-panel .sp-tab:hover{background:var(--g-well);color:var(--g-text);text-shadow:none}
+#side-panel-overlay .side-panel.from-left .sp-tab[class*="active"]{background:var(--g-lens);color:var(--g-violet);text-shadow:none}
+#side-panel-overlay .side-panel.from-right .sp-tab[class*="active"]{background:var(--g-lens);color:var(--g-blue);text-shadow:none}
+.sp-empty{font-family:var(--g-font);font-size:14px;font-weight:500;letter-spacing:0;color:var(--g-muted)}
+
+/* ── ÜST MENÜ + SCROLL (cam) ── */
+.logo-name{font-family:var(--g-font);font-size:16px;font-weight:700;letter-spacing:0;color:var(--g-text);text-shadow:0 1px 10px #000000a6}
+.logo-sub{font-family:var(--g-font);font-size:12px;font-weight:500;letter-spacing:.02em;color:#f6f8fcb3;text-shadow:0 1px 8px #000000a6}
+.nav-l{font-family:var(--g-font);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--g-muted);padding:9px 16px;border-radius:999px;transition:background .2s,color .2s}
+.nav-l::after{display:none}
+.nav-l:hover{background:var(--g-well);color:var(--g-text)}
+.nav-auth-btn,.nav-signout-btn,.nav-btn{font-family:var(--g-font);font-size:13.5px;font-weight:600;letter-spacing:0;text-transform:none;border-radius:999px;padding:9px 18px;transition:transform .2s,background .2s,color .2s}
+.nav-auth-btn{color:var(--g-text);background:linear-gradient(172deg,var(--g-sheen),transparent 60%),var(--g-glass);border:1px solid var(--g-line);box-shadow:var(--g-depth)}
+.nav-auth-btn:hover{background:var(--g-lens);color:var(--g-blue);border-color:var(--g-line)}
+.nav-auth-btn.signed{color:#8fdca8;border-color:#8fdca84d}
+.nav-signout-btn{color:#f6a59c;background:linear-gradient(172deg,var(--g-sheen),transparent 60%),var(--g-glass);border:1px solid var(--g-line);box-shadow:var(--g-depth)}
+.nav-signout-btn:hover{background:var(--g-lens);color:#ffc2ba;border-color:var(--g-line)}
+.nav-btn{color:#fff;background:linear-gradient(172deg,#ffffff40,transparent 60%),#5865f2d9;border:1px solid #ffffff2e;box-shadow:var(--g-depth)}
+.nav-btn:hover{box-shadow:var(--g-depth),0 6px 22px #5865f266;transform:translateY(-1px)}
+.nav-auth-btn:active,.nav-btn:active,.nav-signout-btn:active{transform:scale(1.04,.94)}
+@media (min-width:769px){
+.nav-c{gap:6px;padding:5px 6px;border-radius:999px;background:linear-gradient(172deg,var(--g-sheen),transparent 34%),#2020245c;-webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));border:1px solid var(--g-line);box-shadow:var(--g-depth),var(--g-shadow)}}
+.scroll-cue{font-family:var(--g-font);font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--g-muted);text-shadow:0 1px 8px #000000b3}
+.sec-label{font-family:var(--g-font);font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--g-dim)}
+
+/* ── TRADING büyük harf + Korece başlıkla çakışmasın ── */
+.hero-t1{line-height:1.2}
+.hero-t2{text-transform:uppercase;letter-spacing:.05em;font-size:clamp(44px,7vw,94px)}
+
+/* ═══ VİDEO CANLILIĞI — ÖRNEK: sadece Asmodian (#s1) ve Elyos (#s2) ═══
+   Ayarlamak için sadece aşağıdaki 4 sayıyı değiştir:
+   sat = renk canlılığı · contrast = kontrast · bright = parlaklık · bottom = alttaki karartma (0 = hiç) */
+#s1,#s2{--vid-sat:1.35;--vid-contrast:1.08;--vid-bright:1.14;--vid-bottom:.32}
+#s1 .vbg video,#s2 .vbg video{filter:saturate(var(--vid-sat)) contrast(var(--vid-contrast)) brightness(var(--vid-bright))}
+#s1 .vbg::after{background:linear-gradient(to bottom,rgba(4,2,12,.22) 0%,transparent 18%,transparent 72%,rgba(4,2,12,var(--vid-bottom)) 100%)}
+#s2 .vbg::after{background:linear-gradient(to bottom,rgba(4,2,12,.2) 0%,transparent 18%,transparent 72%,rgba(4,2,12,var(--vid-bottom)) 100%),radial-gradient(ellipse 60% 80% at 25% 50%,transparent 40%,rgba(4,10,24,.2) 100%)}
+
+/* ═══ GEÇİŞ: koyuluk hissedilmesin + içerik hızlı gelsin ═══ */
+/* 1) Geçiş videosu başlayana kadar eski sahne görünür (siyah flaş yok) */
+#trans-wrap{background:transparent}
+/* 2) Video henüz yüklenmediyse siyah yerine bölümün kendi rengi görünür */
+#s0 .vbg{background:linear-gradient(90deg,#16304a,#2b1c52)}
+#s1 .vbg{background:radial-gradient(ellipse at 50% 30%,#3a2a7a,#140d33)}
+#s2 .vbg{background:radial-gradient(ellipse at 50% 30%,#2a5a8f,#0c2040)}
+/* 3) İçerik gecikmesiz ve daha kısa sürede gelsin */
+.asmo-center,.elyos-center{animation-duration:.35s;animation-delay:0s}
+.faction-btns-wrap{transition-duration:.35s}
+.section.active .faction-btns-wrap{transition-delay:.05s}
+.vmf-msg{animation-duration:.4s}
+.vmf-msg:nth-child(2){animation-delay:.05s!important}
+.vmf-msg:nth-child(3){animation-delay:.15s!important}
+.vmf-msg:nth-child(4){animation-delay:.25s!important}
+.hero-tag,.hero-t1,.hero-t2,.hero-div,.hero-sub,.hero-tags-line,.hero-btns,.hero-stats{animation-duration:.55s}
+.hero-tag{animation-delay:.05s}.hero-t1{animation-delay:.1s}.hero-t2{animation-delay:.15s}.hero-div{animation-delay:.2s}
+.hero-sub{animation-delay:.25s}.hero-tags-line{animation-delay:.3s}.hero-btns{animation-delay:.3s}.hero-stats{animation-delay:.35s}
+/* 4) Hero'nun alt karartması da biraz hafif */
+#s0 .vbg::after{background:linear-gradient(to bottom,rgba(4,2,12,.12) 0%,transparent 12%,transparent 60%,rgba(4,2,12,.38) 100%),radial-gradient(ellipse 55% 65% at 50% 50%,transparent 30%,rgba(4,2,12,.06) 100%)}
+
+/* ═══ AYDINLIK AYARI: üst biraz koyu, alt/bulutlar açık (3 bölüm aynı) ═══
+   top = üstteki karartma · bottom = alttaki karartma (0 = hiç) · bright/sat = parlaklık/renk */
+#s0,#s1,#s2,#trans-wrap{--vid-sat:1.3;--vid-contrast:1.06;--vid-bright:1.2;--vid-top:.3;--vid-bottom:.12}
+#s0 .vbg video{filter:saturate(var(--vid-sat)) contrast(var(--vid-contrast)) brightness(var(--vid-bright))}
+#s0 .vbg::after,#s1 .vbg::after{background:linear-gradient(to bottom,rgba(4,2,12,var(--vid-top)) 0%,transparent 20%,transparent 70%,rgba(4,2,12,var(--vid-bottom)) 100%)}
+#s2 .vbg::after{background:linear-gradient(to bottom,rgba(4,2,12,var(--vid-top)) 0%,transparent 20%,transparent 70%,rgba(4,2,12,var(--vid-bottom)) 100%),radial-gradient(ellipse 60% 80% at 25% 50%,transparent 45%,rgba(4,10,24,.12) 100%)}
+
+/* ═══ BOYUT AYARI: yazılar daha küçük ve aynı ölçekte ═══ */
+.hero-tag{font-size:12px;padding:6px 15px;margin-bottom:14px}
+.hero-t1{font-size:clamp(34px,5.2vw,70px);line-height:1.15}
+.hero-t2{font-size:clamp(36px,5.6vw,74px);letter-spacing:.05em;line-height:1}
+.hero-div{width:96px;margin:14px auto}
+.hero-sub{font-size:clamp(13px,1vw,15px);padding:11px 22px;max-width:min(600px,92vw);margin-bottom:14px;border-radius:20px}
+.hero-tags-line{font-size:11px;margin-top:12px}
+.hero-bottom{padding-bottom:40px}
+.scroll-cue{font-size:11px}
+.logo-name{font-size:15px}
+.logo-sub{font-size:11px}
+.nav-l{font-size:13px;padding:8px 14px}
+.nav-auth-btn,.nav-signout-btn,.nav-btn{font-size:12.5px;padding:8px 16px}
+#s1 .vmf-label,#s2 .vmf-label,.faction-label{font-size:11.5px}
+.vmf-msg,.vmf-msg.asmo-msg,.vmf-msg.elyos-msg,#s1 .vmf-msg.admin-reply,#s2 .vmf-msg.admin-reply{font-size:13px;padding:11px 14px 9px;max-width:210px}
+.vmf-msg-meta{font-size:11px;margin-top:6px}
+.faction-slogan{font-size:14px}
+#s1 .faction-btn-row .faction-btn,#s2 .faction-btn-row .faction-btn{font-size:13px!important;padding:10px 20px!important}
+.sp-title{font-size:25px}
+#side-panel-overlay .side-panel .sp-tab{font-size:13px}
+
+/* Geçiş videosu (Asmodian/Elyos'a girerken) bölüm videolarıyla aynı renk ve karartmada: renk sıçraması olmasın */
+#trans-wrap #trans-video{filter:saturate(var(--vid-sat)) contrast(var(--vid-contrast)) brightness(var(--vid-bright))}
+#trans-wrap::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(4,2,12,var(--vid-top)) 0%,transparent 20%,transparent 70%,rgba(4,2,12,var(--vid-bottom)) 100%)}
+
+/* ═══════════ ELYOS TURKUAZ / ASMO KARANLIK — DÖNEN KENAR IŞIĞI ═══════════
+   Geri almak için bu bloğu silmen yeter. Mantık/JS/id değişmedi. */
+@property --ang{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes ringSpin{to{--ang:360deg}}
+:root{
+  --ely:#2fd8e4;--ely-deep:#0b6b82;--ely-ink:#04222e;
+  --asm:#7b4fd8;--asm-deep:#1a0b3a;--asm-ink:#07030f;
+  --split-bg:linear-gradient(90deg,rgba(7,3,15,.62) 0%,rgba(14,7,30,.46) 44%,rgba(8,70,88,.42) 56%,rgba(14,150,168,.36) 100%);
+  --split-line:linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.28) calc(50% - .5px) calc(50% + .5px),transparent calc(50% + .5px));
+}
+
+/* Ortak: dönen kenar halkası */
+.hero-tag,.hero-sub,.nav-c,.faction-btn,.v7-modal{position:relative}
+.hero-tag::after,.hero-sub::after,.nav-c::after,
+#s1 .faction-btn::after,#s2 .faction-btn::after,.v7-modal::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--ang),
+    transparent 0deg,var(--asm-deep) 20deg,var(--asm) 55deg,transparent 110deg,
+    transparent 180deg,var(--ely-deep) 200deg,var(--ely) 235deg,#c9ffff 250deg,transparent 290deg,transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  animation:ringSpin 7s linear infinite;
+  filter:drop-shadow(0 0 5px rgba(47,216,228,.55));
+}
+
+/* Hero: sol karanlık | sağ turkuaz, ortada ince çizgi */
+.hero-tag,.hero-sub{
+  background:var(--split-line),var(--split-bg),var(--g-glass)!important;
+  border-color:rgba(255,255,255,.1)!important;
+}
+.hero-tag{color:var(--g-gold)}
+
+/* Nav kapsülü: Asmodian karanlık tarafta, Elyos turkuaz tarafta */
+.nav-c{background:var(--split-bg),#14141a80!important;border-color:rgba(255,255,255,.1)!important}
+.nav-l:nth-child(1){color:#cdbbff}
+.nav-l:nth-child(2){color:#8ef3f8}
+.nav-l:nth-child(1):hover{background:rgba(123,79,216,.22);color:#fff}
+.nav-l:nth-child(2):hover{background:rgba(47,216,228,.2);color:#fff}
+.nav-auth-btn{background:linear-gradient(172deg,#ffffff1a,transparent 60%),rgba(8,60,78,.45)!important;color:#d9fbff}
+
+/* Satın alma butonları: Asmodian = karanlık, Elyos = turkuaz */
+#s1 .faction-btn-row .faction-btn-asmo{
+  background:linear-gradient(172deg,#ffffff14,transparent 60%),linear-gradient(135deg,rgba(8,3,18,.82),rgba(36,16,78,.6))!important;
+  color:#d6c6ff!important;border-color:rgba(123,79,216,.35)!important}
+#s2 .faction-btn-row .faction-btn-elyos{
+  background:linear-gradient(172deg,#ffffff24,transparent 60%),linear-gradient(135deg,rgba(4,34,46,.8),rgba(14,150,168,.5))!important;
+  color:#a5fbff!important;border-color:rgba(47,216,228,.4)!important;
+  box-shadow:var(--g-depth),var(--g-shadow),0 0 22px rgba(47,216,228,.18)!important}
+/* Kinah butonu bölümün temasına uysun, yazı altın kalsın */
+#s1 .faction-btn-row .faction-btn-kinah{background:linear-gradient(172deg,#ffffff14,transparent 60%),rgba(10,5,22,.72)!important}
+#s2 .faction-btn-row .faction-btn-kinah{background:linear-gradient(172deg,#ffffff1f,transparent 60%),rgba(6,48,62,.6)!important}
+/* Bölüme göre tek renk halka (butonlarda) */
+#s1 .faction-btn::after{background:conic-gradient(from var(--ang),transparent 0deg,var(--asm-deep) 30deg,var(--asm) 70deg,transparent 130deg,transparent 360deg);filter:drop-shadow(0 0 5px rgba(123,79,216,.6))}
+#s2 .faction-btn::after{background:conic-gradient(from var(--ang),transparent 0deg,var(--ely-deep) 30deg,var(--ely) 70deg,#c9ffff 85deg,transparent 140deg,transparent 360deg)}
+
+/* My Account: cam panel */
+.v7-modal-bg{background:rgba(3,6,14,.5)!important;-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
+.v7-modal{
+  background:var(--split-line),linear-gradient(172deg,rgba(255,255,255,.1),transparent 34%),
+    linear-gradient(90deg,rgba(8,4,20,.72) 0%,rgba(12,8,30,.6) 46%,rgba(8,64,82,.55) 54%,rgba(12,130,150,.42) 100%)!important;
+  background-size:100% 100%!important;animation:none!important;
+  -webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%);
+  border:1px solid rgba(255,255,255,.14)!important;border-radius:22px!important;
+  box-shadow:inset 0 1px 1px #ffffff4d,inset 0 -1px 1px #ffffff1a,inset 3px 4px 14px -6px #ffffff33,0 30px 70px -20px #000000cc,0 0 60px -10px rgba(47,216,228,.25)!important}
+.v7-modal::before{display:none}
+.v7-modal::after{border-radius:22px}
+.v7-modal-title{text-shadow:0 0 18px rgba(47,216,228,.5)}
+.v7-tabs{background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.1);border-radius:14px}
+.v7-tab{border-radius:11px}
+.v7-tab.on{background:linear-gradient(90deg,rgba(40,18,90,.75),rgba(14,150,168,.55))!important;border:1px solid rgba(47,216,228,.4)!important;box-shadow:0 0 16px rgba(47,216,228,.2)!important}
+.v7-in{background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.12);border-radius:12px}
+.v7-in:focus{border-color:rgba(47,216,228,.6);box-shadow:0 0 0 3px rgba(47,216,228,.12),0 0 16px rgba(47,216,228,.18)}
+.v7-btn{background:linear-gradient(90deg,rgba(50,22,110,.85),rgba(14,150,168,.7))!important;animation:none!important;border:1px solid rgba(47,216,228,.4)!important;border-radius:12px!important;text-shadow:0 0 12px rgba(120,240,250,.6)}
+.v7-btn:hover{box-shadow:0 0 30px rgba(47,216,228,.4),0 0 50px rgba(123,79,216,.25)!important;border-color:rgba(160,250,255,.7)!important}
+.v7-modal-close{border-radius:10px;background:rgba(0,0,0,.25);position:absolute;z-index:3}
+
+@media (prefers-reduced-motion:reduce){
+  .hero-tag::after,.hero-sub::after,.nav-c::after,#s1 .faction-btn::after,#s2 .faction-btn::after,.v7-modal::after{animation:none}
+}
+
+/* ═══════════ YORUM KARTLARI: dönen kenar + sıralı açılış ═══════════ */
+.vmf-msg{position:relative}
+#s1 .vmf-msg::after,#s2 .vmf-msg::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:2;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  mask-composite:exclude;animation:ringSpin 7s linear infinite}
+#s1 .vmf-msg::after{
+  background:conic-gradient(from var(--ang),transparent 0deg,var(--asm-deep) 30deg,var(--asm) 75deg,#d9c6ff 90deg,transparent 150deg,transparent 360deg);
+  filter:drop-shadow(0 0 5px rgba(123,79,216,.65))}
+#s2 .vmf-msg::after{
+  background:conic-gradient(from var(--ang),transparent 0deg,var(--ely-deep) 30deg,var(--ely) 75deg,#c9ffff 90deg,transparent 150deg,transparent 360deg);
+  filter:drop-shadow(0 0 5px rgba(47,216,228,.6))}
+/* Kartlar aynı anda dönmesin */
+.vmf-msg:nth-child(3)::after{animation-delay:-2.3s!important}
+.vmf-msg:nth-child(4)::after{animation-delay:-4.6s!important}
+
+/* Kart renkleri: Asmo karanlık mor, Elyos koyu turkuaz */
+#s1 .vmf-msg,#s1 .vmf-msg.asmo-msg,#s1 .vmf-msg.admin-reply{
+  background:linear-gradient(172deg,#ffffff1a,transparent 34%),linear-gradient(135deg,rgba(40,16,90,.6),rgba(6,3,14,.78))!important;
+  border-color:rgba(123,79,216,.25)!important}
+#s2 .vmf-msg,#s2 .vmf-msg.elyos-msg,#s2 .vmf-msg.admin-reply{
+  background:linear-gradient(172deg,#ffffff24,transparent 34%),linear-gradient(135deg,rgba(14,150,168,.42),rgba(4,34,46,.78))!important;
+  border-color:rgba(47,216,228,.28)!important}
+
+/* Sıralı açılış: 0.2s → 0.3s → 0.4s (yukarıdan aşağı) */
+.vmf-msg:nth-child(2){animation-delay:.2s!important}
+.vmf-msg:nth-child(3){animation-delay:.3s!important}
+.vmf-msg:nth-child(4){animation-delay:.4s!important}
+
+@media (prefers-reduced-motion:reduce){#s1 .vmf-msg::after,#s2 .vmf-msg::after{animation:none}}
+
+/* ═══════════ GEÇİŞ + GÖZ KONFORU + PERFORMANS ═══════════ */
+/* Video renkleri: daha yumuşak (doygunluk/parlaklık düşürüldü), tek hafif filtre */
+#s0,#s1,#s2,#trans-wrap{--vid-sat:1.08;--vid-contrast:1;--vid-bright:.97;--vid-top:.3;--vid-bottom:.16}
+#s0 .vbg video,#s1 .vbg video,#s2 .vbg video{filter:saturate(1.08) brightness(.97)}
+
+/* Geçiş katmanı: her zaman hazır, sadece görünürlüğü değişir */
+#trans-wrap{display:block!important;visibility:hidden;opacity:0;pointer-events:none;
+  transition:opacity .5s cubic-bezier(.4,0,.2,1),visibility 0s linear .5s}
+#trans-wrap.on{visibility:visible;opacity:1;transition:opacity .15s ease-out,visibility 0s}
+#trans-wrap #trans-video{display:none}
+#trans-wrap .tv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;visibility:hidden;
+  filter:saturate(1.05) brightness(.88)}
+#trans-wrap .tv.cur{visibility:visible}
+/* Beyaz patlamayı yumuşatan hafif karartma */
+#trans-wrap::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(6,4,16,.14)}
+#trans-wrap::after{z-index:1}
+
+/* Hafifletilmiş cam: daha az blur = daha akıcı */
+:root{--g-blur:10px;--g-sat:140%}
+
+/* Halka parlaması (drop-shadow) kare başı pahalı: kapat */
+.hero-tag::after,.hero-sub::after,.nav-c::after,#s1 .faction-btn::after,#s2 .faction-btn::after,
+.v7-modal::after,#s1 .vmf-msg::after,#s2 .vmf-msg::after{filter:none!important}
+
+/* Geçiş sırasında halka animasyonları dursun */
+body.in-trans .hero-tag::after,body.in-trans .hero-sub::after,body.in-trans .nav-c::after,
+body.in-trans #s1 .faction-btn::after,body.in-trans #s2 .faction-btn::after,
+body.in-trans #s1 .vmf-msg::after,body.in-trans #s2 .vmf-msg::after{animation-play-state:paused}
+
+/* Mobilde halka animasyonu kapalı (pil/akıcılık) */
+@media (max-width:768px){
+  .hero-tag::after,.hero-sub::after,.nav-c::after,#s1 .faction-btn::after,#s2 .faction-btn::after,
+  #s1 .vmf-msg::after,#s2 .vmf-msg::after,.v7-modal::after{animation:none}
+}
+
+/* ═══════════ YAN PANEL HALKASI + YENİ İMLEÇ + TIKLAMA DALGASI ═══════════ */
+
+/* ── Yan paneller (Characters / Kinah): Asmodian sol = karanlık mor, Elyos sağ = turkuaz ── */
+#side-panel-overlay .side-panel.from-left{
+  background:linear-gradient(172deg,#ffffff1a,transparent 30%),linear-gradient(160deg,rgba(40,16,90,.55),rgba(6,3,14,.84))!important;
+  -webkit-backdrop-filter:blur(22px) saturate(140%)!important;backdrop-filter:blur(22px) saturate(140%)!important}
+#side-panel-overlay .side-panel.from-right{
+  background:linear-gradient(172deg,#ffffff24,transparent 30%),linear-gradient(200deg,rgba(14,150,168,.42),rgba(4,30,42,.86))!important;
+  -webkit-backdrop-filter:blur(22px) saturate(140%)!important;backdrop-filter:blur(22px) saturate(140%)!important}
+#side-panel-overlay .side-panel.from-left::after,
+#side-panel-overlay .side-panel.from-right::after{
+  display:block!important;content:'';position:absolute;inset:0;height:auto;border-radius:inherit;padding:1.5px;
+  pointer-events:none;z-index:5;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  mask-composite:exclude;animation:ringSpin 8s linear infinite}
+#side-panel-overlay .side-panel.from-left::after{
+  background:conic-gradient(from var(--ang),transparent 0deg,var(--asm-deep) 30deg,var(--asm) 80deg,#d9c6ff 95deg,transparent 160deg,transparent 360deg)}
+#side-panel-overlay .side-panel.from-right::after{
+  background:conic-gradient(from var(--ang),transparent 0deg,var(--ely-deep) 30deg,var(--ely) 80deg,#c9ffff 95deg,transparent 160deg,transparent 360deg)}
+.side-panel.from-left .sp-tab.active-asmo{background:rgba(123,79,216,.28)!important;color:#e6dcff!important}
+.side-panel.from-right .sp-tab.active-gold{background:rgba(47,216,228,.2)!important;color:#b9fcff!important}
+.side-panel.from-left .sp-faction-tag{color:#cdbbff}
+.side-panel.from-right .sp-faction-tag{color:#8ef3f8}
+@media (max-width:768px){
+  #side-panel-overlay .side-panel.from-left::after,#side-panel-overlay .side-panel.from-right::after{animation:none}}
+
+/* ── İmleç: nokta ikiye bölünmüş (mor|turkuaz), etrafında dönen iki renkli halka ── */
+#cd{width:9px;height:9px;background:linear-gradient(90deg,#a98bff 50%,#43e8f2 50%);
+  box-shadow:0 0 8px rgba(169,139,255,.8),0 0 16px rgba(67,232,242,.55);transition:width .15s,height .15s}
+#cr{width:40px;height:40px;border:0;box-shadow:none;background:none;transition:width .2s,height .2s}
+#cr::before{content:'';position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,255,255,.14)}
+#cr::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(transparent 0deg,#3b1d8a 25deg,#9a78ff 70deg,transparent 125deg,transparent 180deg,#0b6b82 205deg,#43e8f2 250deg,transparent 305deg,transparent 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));
+  animation:crSpin 2.8s linear infinite}
+@keyframes crSpin{to{transform:rotate(360deg)}}
+body.ck #cd{width:5px;height:5px}
+body.ck #cr{width:28px;height:28px}
+/* Bölüme göre tek renk */
+body:has(#s1.active) #cd{background:#b79cff;box-shadow:0 0 10px rgba(169,139,255,.85),0 0 20px rgba(123,79,216,.5)}
+body:has(#s1.active) #cr::after{background:conic-gradient(transparent 0deg,#3b1d8a 30deg,#9a78ff 85deg,#e0d2ff 100deg,transparent 170deg,transparent 360deg)}
+body:has(#s2.active) #cd{background:#6af2fa;box-shadow:0 0 10px rgba(67,232,242,.85),0 0 20px rgba(14,150,168,.5)}
+body:has(#s2.active) #cr::after{background:conic-gradient(transparent 0deg,#0b6b82 30deg,#43e8f2 85deg,#d4ffff 100deg,transparent 170deg,transparent 360deg)}
+
+/* ── Tıklama dalgası (index_1 tarzı) ── */
+.rpl{display:none!important}
+.rpw2{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:6}
+.rp2{position:absolute;width:20px;height:20px;margin:-10px;border-radius:50%;
+  background:radial-gradient(circle,transparent 38%,var(--rpc,rgba(255,255,255,.5)) 62%,transparent 72%);
+  animation:rp2 .75s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rp2{from{transform:scale(.2);opacity:.9}to{transform:scale(var(--rs,18));opacity:0}}
+.shock{position:fixed;z-index:99998;width:30px;height:30px;margin:-15px;border-radius:50%;pointer-events:none;
+  border:1.5px solid var(--rpc,rgba(255,255,255,.5));animation:shock .65s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes shock{from{transform:scale(.3);opacity:.8}to{transform:scale(4.5);opacity:0}}
+
+/* ── İmleç görünürlüğü: açık ve koyu zeminde okunur ── */
+#cd{width:10px;height:10px;border:1.5px solid rgba(255,255,255,.95);
+  box-shadow:0 0 0 1.5px rgba(8,4,20,.55),0 0 8px rgba(169,139,255,.8),0 0 16px rgba(67,232,242,.55)}
+body.ck #cd{width:6px;height:6px}
+#cr{width:42px;height:42px}
+#cr::before{border:1.5px solid rgba(255,255,255,.28);box-shadow:0 0 0 1px rgba(8,4,20,.35),inset 0 0 0 1px rgba(8,4,20,.2)}
+#cr::after{
+  background:conic-gradient(transparent 0deg,#6a45d6 20deg,#b79cff 70deg,#fff 88deg,transparent 125deg,transparent 180deg,#16a3bd 200deg,#5af0fa 250deg,#fff 268deg,transparent 305deg,transparent 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
+  filter:drop-shadow(0 0 1.5px rgba(8,4,20,.9))}
+body:has(#s1.active) #cd{background:#c2adff}
+body:has(#s1.active) #cr::after{background:conic-gradient(transparent 0deg,#6a45d6 25deg,#b79cff 85deg,#fff 102deg,transparent 175deg,transparent 360deg)}
+body:has(#s2.active) #cd{background:#7ff4fb}
+body:has(#s2.active) #cr::after{background:conic-gradient(transparent 0deg,#0e8aa6 25deg,#43e8f2 85deg,#fff 102deg,transparent 175deg,transparent 360deg)}
 </style>
 </head>
 <body>
@@ -2201,7 +2589,7 @@ body::before{content:'';position:fixed;inset:0;z-index:100;pointer-events:none;b
 
 <!-- ══ SECTION 0: HERO ══ -->
 <div class="section active" id="s0">
-  <div class="vbg"><video muted loop playsinline preload="none"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776985830/loop_00_attwrj.mp4" type="video/mp4"></video></div>
+  <div class="vbg"><video muted loop playsinline preload="none" poster="https://res.cloudinary.com/dxbsrlgaf/video/upload/so_0,w_1600,q_auto/v1776985830/loop_00_attwrj.jpg"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776985830/loop_00_attwrj.mp4" type="video/mp4"></video></div>
   <div class="hero-bottom">
     <div class="hero-tag"><div class="tag-line"></div>Aion 4.6 · Trusted Seller · EU<div class="tag-line r"></div></div>
     <span class="hero-t1">어둠과 빛</span>
@@ -2218,7 +2606,7 @@ body::before{content:'';position:fixed;inset:0;z-index:100;pointer-events:none;b
 <div class="section" id="s1">
 
   <!-- Tam ekran video arka plan -->
-  <div class="vbg"><video muted loop playsinline preload="none"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776986238/loop_01_vatd2i.mp4" type="video/mp4"></video></div>
+  <div class="vbg"><video muted loop playsinline preload="none" poster="https://res.cloudinary.com/dxbsrlgaf/video/upload/so_0,w_1600,q_auto/v1776986238/loop_01_vatd2i.jpg"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776986238/loop_01_vatd2i.mp4" type="video/mp4"></video></div>
 
   <!-- Işık görseli -->
   <img class="asmo-light-img" src="https://res.cloudinary.com/dxbsrlgaf/image/upload/v1776989450/asmo_%C4%B1%C5%9F%C4%B1k_t62fvu.png" alt="">
@@ -2257,7 +2645,7 @@ body::before{content:'';position:fixed;inset:0;z-index:100;pointer-events:none;b
 <div class="section" id="s2">
 
   <!-- Tam ekran video arka plan -->
-  <div class="vbg"><video muted loop playsinline preload="none"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776986245/loop_02_mj7vih.mp4" type="video/mp4"></video></div>
+  <div class="vbg"><video muted loop playsinline preload="none" poster="https://res.cloudinary.com/dxbsrlgaf/video/upload/so_0,w_1600,q_auto/v1776986245/loop_02_mj7vih.jpg"><source src="https://res.cloudinary.com/dxbsrlgaf/video/upload/v1776986245/loop_02_mj7vih.mp4" type="video/mp4"></video></div>
 
   <!-- Işık görseli -->
   <img class="elyos-light-img" src="https://res.cloudinary.com/dxbsrlgaf/image/upload/v1776989450/elyosparlakl%C4%B1k_djmual.png" alt="">
@@ -2388,12 +2776,12 @@ import { getFirestore, doc, onSnapshot, getDoc, addDoc, collection, setDoc, upda
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAFTuJ7UluP67nLVJ8__26VqovRYJyLS_k",
-  authDomain: "ojooh-trading.firebaseapp.com",
-  projectId: "ojooh-trading",
-  storageBucket: "ojooh-trading.firebasestorage.app",
-  messagingSenderId: "844117023514",
-  appId: "1:844117023514:web:fa6360caa5695fbd22aaa3"
+  apiKey: "AIzaSyDi8HLgBXxjfwmS_dQht3MDpHEOSS9VIrY",
+  authDomain: "vorgheizer-trading.firebaseapp.com",
+  projectId: "vorgheizer-trading",
+  storageBucket: "vorgheizer-trading.firebasestorage.app",
+  messagingSenderId: "1052512132351",
+  appId: "1:1052512132351:web:f7cc0e6368c843d1b640ca"
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); window._db = db; window._getDoc = getDoc; window._doc = doc;
@@ -4410,50 +4798,58 @@ const transVideo=document.getElementById('trans-video');
 const transSrc=document.getElementById('trans-src');
 
 
+/* ── HIZLI GEÇİŞ: videolar önceden hazır, scroll anında tepki verir ── */
+const TRANS_RATE=1.25;       // geçiş videosu hızı (1 = normal)
+const transVids={};
+function getTransVid(key){
+  const url=TRANS[key]; if(!url) return null;
+  if(!transVids[key]){
+    const v=document.createElement('video');
+    v.className='tv'; v.muted=true; v.playsInline=true; v.setAttribute('playsinline','');
+    v.preload='auto'; v.src=url; transWrap.appendChild(v);
+    try{v.load();}catch(e){}
+    transVids[key]=v;
+  }
+  return transVids[key];
+}
+window.warmTransitions=function(){ ['0-1','1-2'].forEach(getTransVid); };
+
 window.goTo = function(n){
   if(animating||n===cur||n<0||n>=SECTIONS.length) return;
   if(document.getElementById('char-detail-overlay') && document.getElementById('char-detail-overlay').style.display==='block') return;
   if(document.getElementById('side-panel-overlay') && document.getElementById('side-panel-overlay').classList.contains('open')) return;
   const key=cur+'-'+n;
-  const transUrl=TRANS[key];
+  const v=getTransVid(key);
   animating=true;
 
-  function finish(){
-    showSection(n);
-    cur=n;
-    transWrap.style.display='none';
-    transWrap.style.opacity='1';
-    transWrap.style.transition='';
-    animating=false;
-    lastScroll=0;
+  // Video henüz hazır değilse bekletme: direkt geç
+  if(!v || v.readyState<3){
+    showSection(n); cur=n; animating=false; lastScroll=Date.now();
+    return;
   }
 
-  if(transUrl){
-    transVideo.pause();
-    transSrc.src=transUrl;
-    transVideo.load();
-    transWrap.style.display='block';
-    transWrap.style.opacity='1';
-    transVideo.currentTime=0;
-
-    // Güvenlik timeout — 5s'de zorla bitir
-    const safeTimer=setTimeout(()=>finish(),5000);
-
-    transVideo.onended=()=>{
-      clearTimeout(safeTimer);
-      showSection(n); cur=n;
-      transWrap.style.transition='opacity .35s ease';
-      transWrap.style.opacity='0';
-      setTimeout(()=>{ finish(); },360);
-    };
-
-    transVideo.onerror=()=>{ clearTimeout(safeTimer); finish(); };
-
-    transVideo.play().catch(()=>{ clearTimeout(safeTimer); finish(); });
-
-  } else {
-    finish();
+  let ended=false;
+  const safe=setTimeout(()=>end(),7000);
+  function chk(){ if(v.duration && v.duration-v.currentTime<0.55) end(); }
+  function end(){
+    if(ended) return; ended=true;
+    clearTimeout(safe); v.removeEventListener('timeupdate',chk);
+    if(cur!==n){ showSection(n); cur=n; }
+    transWrap.classList.remove('on');            // yumuşak sönüş
+    setTimeout(()=>{
+      v.pause(); v.classList.remove('cur');
+      document.body.classList.remove('in-trans');
+      animating=false; lastScroll=Date.now();
+    },520);
   }
+  document.body.classList.add('in-trans');
+  v.classList.add('cur'); v.currentTime=0; v.playbackRate=TRANS_RATE;
+  v.addEventListener('timeupdate',chk);
+  v.addEventListener('ended',end,{once:true});
+  v.addEventListener('error',end,{once:true});
+  transWrap.classList.add('on');                 // hızlı belirme
+  const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>end());
+  setTimeout(()=>{ if(!ended){ showSection(n); cur=n; } },160);   // örtü kapandıktan sonra bölümü değiştir
 };
 
 function showSection(n){
@@ -4482,7 +4878,7 @@ document.addEventListener('wheel',e=>{
   if(document.getElementById('market-overlay').classList.contains('open')) return;
   if(document.getElementById('side-panel-overlay').classList.contains('open')) return;
   const now=Date.now();
-  if(now-lastScroll<1200) return;
+  if(now-lastScroll<600) return;
   lastScroll=now;
   if(e.deltaY>30) window.goTo(cur+1);
   else if(e.deltaY<-30 && cur>0) window.goTo(cur-1);
@@ -4496,7 +4892,7 @@ document.addEventListener('touchend',e=>{
   if(document.getElementById('side-panel-overlay').classList.contains('open')) return;
   const dy=ty0-e.changedTouches[0].clientY;
   const now=Date.now();
-  if(Math.abs(dy)>50&&now-lastScroll>1200){lastScroll=now;if(dy>0)window.goTo(cur+1);else if(cur>0)window.goTo(cur-1);}
+  if(Math.abs(dy)>50&&now-lastScroll>600){lastScroll=now;if(dy>0)window.goTo(cur+1);else if(cur>0)window.goTo(cur-1);}
 },{passive:true});
 
 /* RIPPLE */
@@ -5452,5 +5848,56 @@ window.copyRefCode = function copyRefCode(code){
   <div id="pc-ref-section"></div>
 </div>
 
+<script>
+/* Asmodian/Elyos videolarını arka planda önceden yükle: geçişte koyu bekleme olmasın */
+(function(){
+  var done=false;
+  function warm(){
+    if(done) return; done=true;
+    if(navigator.connection && navigator.connection.saveData) return;
+    ['#s1','#s2'].forEach(function(id){
+      var v=document.querySelector(id+' .vbg video');
+      if(v && v.paused && v.readyState===0 && !v.closest('.section.active')){
+        v.preload='auto'; try{v.load();}catch(e){}
+      }
+    });
+  }
+  var s0=document.querySelector('#s0 .vbg video');
+  function warmT(){ if(navigator.connection && navigator.connection.saveData) return; if(window.warmTransitions) window.warmTransitions(); }
+  if(s0){ s0.addEventListener('playing',function(){ setTimeout(warmT,1200); setTimeout(warm,2500); },{once:true}); }
+  setTimeout(warmT,3000);
+  setTimeout(warm,4000);
+})();
+</script>
+<script>
+/* Tıklama dalgası: elemanın içinde (kırpılı) + imleçten çıkan ince halka. Asmo = mor, Elyos = turkuaz */
+(function(){
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var SEL='.faction-btn,.nav-auth-btn,.nav-signout-btn,.nav-btn,.nav-l,.hero-tag,.hero-sub,.sp-tab,.sp-close,.v7-btn,.v7-tab,.v7-modal,.market-tab,.mkt-char-btn,.mkt-kinah-btns button,.logo,.side-panel,.market-panel';
+  var V='rgba(165,130,255,.6)',T='rgba(80,235,245,.65)';
+  function secColor(){
+    if(document.querySelector('#s1.active')) return V;
+    if(document.querySelector('#s2.active')) return T;
+    return null;
+  }
+  document.addEventListener('pointerdown',function(e){
+    if(e.button>0) return;
+    var x=e.clientX,y=e.clientY,col=secColor(),el=e.target.closest?e.target.closest(SEL):null;
+    if(el){
+      var r=el.getBoundingClientRect();
+      if(!col||el.closest('nav')||el.closest('.v7-modal')) col=(x<r.left+r.width/2)?V:T;
+      if(getComputedStyle(el).position==='static') el.style.position='relative';
+      var w=document.createElement('span'),s=document.createElement('span');
+      w.className='rpw2'; s.className='rp2';
+      s.style.cssText='left:'+(x-r.left)+'px;top:'+(y-r.top)+'px;--rpc:'+col+';--rs:'+Math.max(10,Math.max(r.width,r.height)*1.7/20).toFixed(1);
+      w.appendChild(s); el.appendChild(w);
+      setTimeout(function(){w.remove();},800);
+    } else if(!col){ col=(x<innerWidth/2)?V:T; }
+    var k=document.createElement('div');
+    k.className='shock'; k.style.cssText='left:'+x+'px;top:'+y+'px;--rpc:'+col;
+    document.body.appendChild(k); setTimeout(function(){k.remove();},700);
+  },{passive:true});
+})();
+</script>
 </body>
 </html>
