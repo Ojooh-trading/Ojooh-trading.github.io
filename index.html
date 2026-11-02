@@ -2496,6 +2496,15 @@ body:has(#s1.active) #cd{background:#c2adff}
 body:has(#s1.active) #cr::after{background:conic-gradient(transparent 0deg,#6a45d6 25deg,#b79cff 85deg,#fff 102deg,transparent 175deg,transparent 360deg)}
 body:has(#s2.active) #cd{background:#7ff4fb}
 body:has(#s2.active) #cr::after{background:conic-gradient(transparent 0deg,#0e8aa6 25deg,#43e8f2 85deg,#fff 102deg,transparent 175deg,transparent 360deg)}
+
+/* ═══ YORUM KARTLARI: sırayla iniş (geçiş bitince başlar) ═══
+   Süreleri değiştirmek için aşağıdaki 3 sayıyı düzenle */
+body.in-trans .vmf-msg{animation:none!important;opacity:0}
+.vmf-msg{animation-duration:.55s}
+.vmf-msg:nth-child(2){animation-delay:.3s!important}
+.vmf-msg:nth-child(3){animation-delay:.5s!important}
+.vmf-msg:nth-child(4){animation-delay:.7s!important}
+@keyframes vmfIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -2772,7 +2781,7 @@ body:has(#s2.active) #cr::after{background:conic-gradient(transparent 0deg,#0e8a
 <!-- Lightbox -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, onSnapshot, getDoc, addDoc, collection, setDoc, updateDoc, query, where, limit, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, doc, onSnapshot, getDoc, addDoc, collection, setDoc, updateDoc, query, where, limit, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -2784,7 +2793,7 @@ const firebaseConfig = {
   appId: "1:1052512132351:web:f7cc0e6368c843d1b640ca"
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); window._db = db; window._getDoc = getDoc; window._doc = doc;
+const db = initializeFirestore(app,{experimentalAutoDetectLongPolling:true}); window._db = db; window._getDoc = getDoc; window._doc = doc;
 const auth = getAuth(app);
 
 /* ═══ VISITOR TRACKING (IP-based) ═══ */
@@ -2921,6 +2930,9 @@ onSnapshot(doc(db,'settings','status'), snap => {
 function renderReviews(race, reviews) {
   const el = document.getElementById('vmf-' + race);
   if(!el) return;
+  const _sig = JSON.stringify(reviews.slice(0,3).map(r=>[r.review||r.note||'']));
+  if(el.dataset.sig === _sig) return;
+  el.dataset.sig = _sig;
   const isAsmo = race === 'asmo';
   const msgClass = isAsmo ? 'asmo-msg' : 'elyos-msg';
   const icon = isAsmo ? '⚔' : '✦';
@@ -2975,6 +2987,10 @@ const DEFAULT_REVIEWS = {
     { race:'Elyos', confirmed:true, review:'Very professional seller. Everything went perfectly.', note:'', timestamp: Date.now()-259200000 },
   ]
 };
+
+// Firebase gelmeden önce hemen göster (bekleme yazısı görünmesin)
+renderReviews('asmo', DEFAULT_REVIEWS.asmo);
+renderReviews('elyos', DEFAULT_REVIEWS.elyos);
 
 // ── LIVE REVIEW FEED (index gerektirmez) ──
 onSnapshot(
@@ -4836,6 +4852,7 @@ window.goTo = function(n){
     clearTimeout(safe); v.removeEventListener('timeupdate',chk);
     if(cur!==n){ showSection(n); cur=n; }
     transWrap.classList.remove('on');            // yumuşak sönüş
+    document.body.classList.remove('in-trans');  // kartlar şimdi sırayla başlasın
     setTimeout(()=>{
       v.pause(); v.classList.remove('cur');
       document.body.classList.remove('in-trans');
